@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import initialContacts from "../contacts.json";
+import ContactList from "../components/ContactList/ContactList";
+import SearchBox from "../components/SearchBox/SearchBox";
+import ContactForm from "../components/ContactForm/ContactForm";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [contact, setContact] = useState(() => {
+    const savedContacts = localStorage.getItem('contacts');
+    return savedContacts ? JSON.parse(savedContacts) : initialContacts;
+  });
 
+  useEffect(() => {
+    localStorage.setItem("contacts", JSON.stringify(contact));
+  }, [contact]);
+
+  const [filter, setFilter] = useState("");
+
+  const addCont = (newCont) => {
+    setContact((prevCont) => [...prevCont, newCont]);
+  };
+
+  const deleteCont = (contId) => {
+    setContact((prevContacts) => prevContacts.filter((contact) => contact.id !== contId));
+  };
+
+  const visibleContact = contact.filter((contact) => contact.name.toLowerCase().includes(filter.toLowerCase()));
+
+  useEffect(() => {
+    if (contact.length === 0) {
+      setContact(initialContacts);
+    }
+  }, []);
+  
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <h1>Phonebook</h1>
+      <ContactForm onAdd={addCont} />
+      <SearchBox value={filter} onFilter={setFilter} />
+      <ContactList contact={visibleContact} onDelete={deleteCont} />
+    </div>
+  );
 }
-
-export default App
