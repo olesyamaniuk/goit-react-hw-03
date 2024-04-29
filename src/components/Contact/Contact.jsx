@@ -1,3 +1,4 @@
+
 export default function Contact({ data, onDelete }) {
     const { id, name, number } = data;
   
