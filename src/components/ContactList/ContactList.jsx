@@ -1,4 +1,4 @@
-import Contact from "../Contact/Contact";
+// import Contact from "../Contact/Contact";
 
 // export default function ContactList({ contacts, onDelete }) {
 //   return (
@@ -12,15 +12,18 @@ import Contact from "../Contact/Contact";
 //   );
 // }
 
+import Contact from "../Contact/Contact"
+import css from "../ContactList/ContactList.module.css"
 
-const ContactList = ({ contacts }) => {
-  return (
-    <ul>
-      {contacts.map(contact => (
-        <Contact key={contact.id} contact={contact} />
-      ))}
-    </ul>
-  );
-};
-
-export default ContactList;
+export default function ContactList( {contact , onDelete }) {
+    return (
+      <ul className={css.list}>
+        {contact.map((contacts)=>(
+          <li key={contacts.id} className={css.item}>
+            <Contact data={contacts} onDelete={onDelete} />
+          </li>
+        ))}
+      </ul>
+       
+     )
+   }
